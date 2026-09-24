@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0a0f1e">
+<title>인천 여행 2026 — 포뇨 & 민주</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@700;900&family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script type="text/javascript" src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=3rulct9aeo"></script>
+<style>
+/* ─── TOKENS ─────────────────────────────────── */
+:root{
+  --d0:#4C1D95; --d0l:#7C3AED; --d0bg:#F5F3FF;
+  --d1:#92400E; --d1l:#D97706; --d1bg:#FFFBEB;
+  --d2:#064E3B; --d2l:#059669; --d2bg:#ECFDF5;
+  --d3:#0C4A6E; --d3l:#0284C7; --d3bg:#F0F9FF;
+  --navy:#0a0f1e; --cream:#FEF3C7; --gold:#F0C040;
+  --bg:#f8fafc; --card:#ffffff;
+  --txt:#111827; --txt2:#6B7280; --border:#E5E7EB;
+  --safe-t:env(safe-area-inset-top,0px);
+  --safe-b:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--txt);overflow-x:hidden}
+img{display:block}
+
+/* ─── HERO ──────────────────────────────────── */
+#hero{
+  position:relative;min-height:100svh;
+  background:linear-gradient(170deg,#0a0f1e 0%,#0f2240 50%,#0a2a2a 100%);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:calc(var(--safe-t)+60px) 24px calc(var(--safe-b)+80px);
+  overflow:hidden;
+}
+/* 별 파티클 */
+.star{position:absolute;border-radius:50%;background:rgba(255,255,255,.7);animation:twinkle 3s infinite}
+@keyframes twinkle{0%,100%{opacity:.7;transform:scale(1)}50%{opacity:.2;transform:scale(.5)}}
+/* 파도 장식 */
+#hero::after{content:'';position:absolute;bottom:-2px;left:0;right:0;height:60px;background:var(--bg);clip-path:ellipse(55% 100% at 50% 100%)}
+.hero-pill{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:50px;padding:6px 16px;font-size:.75rem;color:rgba(255,255,255,.7);margin-bottom:20px;letter-spacing:1.5px}
+.hero-names{font-family:'Noto Serif KR',serif;font-size:1rem;color:rgba(255,255,255,.55);letter-spacing:3px;margin-bottom:16px}
+.hero-title{font-family:'Noto Serif KR',serif;font-size:clamp(4rem,20vw,9rem);font-weight:900;line-height:.95;letter-spacing:-4px;background:linear-gradient(135deg,#FEF3C7 0%,#5EEAD4 50%,#38BDF8 100%);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:20px}
+.hero-dates{font-size:.9rem;color:rgba(255,255,255,.6);margin-bottom:36px;line-height:1.8}
+/* 카운트다운 */
+.cd{display:flex;gap:10px;justify-content:center}
+.cd-unit{background:rgba(255,255,255,.07);border:1px solid rgba(94,234,212,.25);border-radius:14px;padding:12px 16px;min-width:64px;text-align:center}
+.cd-n{display:block;font-family:'Noto Serif KR',serif;font-size:1.8rem;font-weight:700;color:#5EEAD4;line-height:1}
+.cd-u{display:block;font-size:.6rem;letter-spacing:2px;color:rgba(255,255,255,.3);margin-top:4px}
+/* 스크롤 힌트 */
+.scroll-hint{position:absolute;bottom:calc(var(--safe-b)+72px);left:50%;transform:translateX(-50%);color:rgba(255,255,255,.3);font-size:.72rem;letter-spacing:2px;animation:bounce 2s infinite}
+@keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(6px)}}
+
+/* ─── FLOATING NAV ──────────────────────────── */
+#fnav{
+  position:sticky;top:0;z-index:500;
+  background:rgba(255,255,255,.95);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  display:flex;padding:8px 12px;gap:6px;overflow-x:auto;scrollbar-width:none;
+}
+#fnav::-webkit-scrollbar{display:none}
+.fn-btn{flex-shrink:0;padding:7px 14px;border-radius:50px;font-size:.78rem;font-weight:700;color:var(--txt2);border:1.5px solid var(--border);background:#fff;transition:all .2s}
+.fn-btn.active{color:#fff;border-color:transparent}
+.fn-btn[data-d="0"].active{background:var(--d0l)}
+.fn-btn[data-d="1"].active{background:var(--d1l)}
+.fn-btn[data-d="2"].active{background:var(--d2l)}
+.fn-btn[data-d="3"].active{background:var(--d3l)}
+.fn-btn[data-d="map"].active{background:#374151}
+
+/* ─── SECTION COMMON ────────────────────────── */
+.section{padding:0 0 60px}
+.s-banner{position:relative;padding:52px 24px 68px;overflow:hidden;text-align:center}
+.s-banner::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:50px;background:var(--bg);clip-path:ellipse(55% 100% at 50% 100%)}
+.s-tag{display:inline-block;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:4px;padding:3px 12px;font-size:.68rem;letter-spacing:2.5px;color:rgba(255,255,255,.8);text-transform:uppercase;margin-bottom:14px}
+.s-title{font-family:'Noto Serif KR',serif;font-size:clamp(1.6rem,7vw,2.4rem);font-weight:900;color:#fff;line-height:1.2;margin-bottom:10px}
+.s-sub{font-size:.82rem;color:rgba(255,255,255,.6);line-height:1.9}
+/* 배너 배경색 */
+.b0{background:linear-gradient(140deg,#12004A,#3B0764,#5B21B6)}
+.b1{background:linear-gradient(140deg,#431407,#92400E,#D97706)}
+.b2{background:linear-gradient(140deg,#012618,#064E3B,#059669)}
+.b3{background:linear-gradient(140deg,#03202E,#0C4A6E,#0284C7)}
+/* 배너 CSS 장식 */
+.b-deco{position:absolute;pointer-events:none;opacity:.08;font-size:8rem}
+.b-deco.tl{top:-20px;left:-10px;transform:rotate(-10deg)}
+.b-deco.br{bottom:-20px;right:-10px;transform:rotate(10deg)}
+
+.s-body{padding:20px 16px 0;max-width:720px;margin:0 auto}
+
+/* ─── DAY OVERVIEW CARDS ────────────────────── */
+#overview{padding:32px 16px;max-width:720px;margin:0 auto}
+.ov-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ov-card{border-radius:16px;padding:16px;cursor:pointer;transition:transform .15s,box-shadow .15s;color:#fff}
+.ov-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.15)}
+.ov-card.c0{background:linear-gradient(135deg,#3B0764,#5B21B6)}
+.ov-card.c1{background:linear-gradient(135deg,#92400E,#D97706)}
+.ov-card.c2{background:linear-gradient(135deg,#064E3B,#059669)}
+.ov-card.c3{background:linear-gradient(135deg,#0C4A6E,#0284C7)}
+.ov-emoji{font-size:1.8rem;margin-bottom:8px}
+.ov-date{font-size:.68rem;opacity:.7;letter-spacing:1px;margin-bottom:4px}
+.ov-name{font-size:.88rem;font-weight:700;line-height:1.35}
+
+/* ─── MAP ───────────────────────────────────── */
+#map-section{padding:0 16px 40px;max-width:720px;margin:0 auto}
+.map-wrap{border-radius:20px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.1)}
+#map{height:320px;background:#e0e8f0}
+.map-legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.legend-dot{display:flex;align-items:center;gap:6px;font-size:.75rem;color:var(--txt2)}
+.legend-dot::before{content:'';width:10px;height:10px;border-radius:50%;background:var(--c)}
+
+/* ─── CHECKLIST ─────────────────────────────── */
+.checklist{background:var(--card);border-radius:16px;padding:18px;border:1px solid var(--border);box-shadow:0 1px 6px rgba(0,0,0,.05);margin-bottom:20px}
+.cl-title{font-size:.72rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--txt2);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.cl-title::after{content:'';flex:1;height:1px;background:var(--border)}
+.cl-items{display:flex;flex-wrap:wrap;gap:8px}
+.cl-item{display:flex;align-items:center;gap:7px;background:var(--bg);border:1.5px solid var(--border);border-radius:9px;padding:7px 12px;font-size:.8rem;color:#374151;cursor:pointer;user-select:none;transition:all .18s}
+.cl-item.done{background:#F0FDF4;border-color:#86EFAC;color:#15803D;text-decoration:line-through;opacity:.7}
+.cl-icon{font-size:.85rem}
+
+/* ─── SECTION DIVIDER ───────────────────────── */
+.sdiv{display:flex;align-items:center;gap:10px;margin:24px 0 16px}
+.sdiv-line{flex:1;height:1px;background:var(--border)}
+.sdiv-text{font-size:.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--txt2);white-space:nowrap}
+
+/* ─── ACTIVITY CARDS ────────────────────────── */
+.act{background:var(--card);border-radius:16px;padding:0;border:1px solid var(--border);box-shadow:0 1px 8px rgba(0,0,0,.05);margin-bottom:12px;overflow:hidden;transition:transform .15s,box-shadow .15s}
+.act:hover{transform:translateY(-1px);box-shadow:0 5px 18px rgba(0,0,0,.09)}
+.act-top{display:grid;grid-template-columns:52px 1fr;gap:12px;padding:14px 14px 12px}
+.act-icon{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0}
+.act-time{font-size:.68rem;font-weight:700;letter-spacing:1px;color:var(--txt2);margin-bottom:4px}
+.act-name{font-size:.95rem;font-weight:800;color:var(--txt);line-height:1.3;margin-bottom:5px}
+.act-badges{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:6px}
+.badge{font-size:.68rem;font-weight:600;padding:2px 8px;border-radius:20px;white-space:nowrap}
+.b-cat{background:var(--bg);color:var(--txt2);border:1px solid var(--border)}
+.b-move{background:#EFF6FF;color:#1d4ed8}
+.b-warn{background:#FFF7ED;color:#c2410c}
+.b-tip{background:#F0FDF4;color:#15803D}
+.act-desc{font-size:.8rem;color:var(--txt2);line-height:1.65;padding:0 14px 10px}
+/* 팁 박스 */
+.tip-box{margin:0 14px 12px;border-radius:10px;padding:10px 12px;font-size:.78rem;line-height:1.6}
+.tip-box.yellow{background:#FFFBEB;border:1px solid #FDE68A;color:#92400E}
+.tip-box.teal{background:#F0FDFA;border:1px solid #99F6E4;color:#134E4A}
+.tip-box.red{background:#FFF1F2;border:1px solid #FECDD3;color:#9F1239}
+.tip-box.sky{background:#F0F9FF;border:1px solid #BAE6FD;color:#0C4A6E}
+.tip-box.purple{background:#FAF5FF;border:1px solid #DDD6FE;color:#4C1D95}
+/* 액션 버튼 */
+.act-btns{display:flex;border-top:1px solid var(--border)}
+.abt{flex:1;padding:10px 8px;font-size:.75rem;font-weight:700;color:var(--txt2);border-right:1px solid var(--border);text-align:center;cursor:pointer;transition:background .15s}
+.abt:last-child{border-right:none}
+.abt:hover{background:var(--bg)}
+.abt.go{color:#0284C7}
+.abt.map{color:#059669}
+
+/* ─── SPECIAL WIDGETS ───────────────────────── */
+/* 조수 위젯 */
+.tide-widget{background:linear-gradient(135deg,#0C4A6E,#0369A1);border-radius:16px;padding:20px;margin-bottom:16px;color:#fff}
+.tide-title{font-size:.78rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;opacity:.7;margin-bottom:14px}
+.tide-bar-wrap{position:relative;height:60px;margin-bottom:14px}
+.tide-bar-bg{position:absolute;inset:0;border-radius:30px;background:rgba(255,255,255,.1)}
+.tide-water{position:absolute;bottom:0;left:0;right:0;border-radius:30px;background:linear-gradient(180deg,#38BDF8,#0369A1);transition:height .5s}
+.tide-times{display:flex;justify-content:space-between;font-size:.72rem;opacity:.75}
+.tide-note{font-size:.75rem;opacity:.65;margin-top:10px;line-height:1.6}
+.tide-golden{background:rgba(240,192,64,.15);border:1px solid rgba(240,192,64,.3);border-radius:8px;padding:7px 10px;margin-top:10px;font-size:.75rem;color:#FCD34D;line-height:1.5}
+
+/* 일몰 위젯 */
+.sunset-widget{background:linear-gradient(135deg,#92400E,#D97706,#F59E0B);border-radius:16px;padding:18px;margin-bottom:16px;color:#fff}
+.sun-emoji{font-size:2rem;margin-bottom:8px}
+.sun-time{font-size:1.4rem;font-weight:800;font-family:'Noto Serif KR',serif}
+.sun-sub{font-size:.78rem;opacity:.75;margin-top:4px}
+
+/* 하이라이트 박스 */
+.hl{border-left:4px solid;border-radius:0 12px 12px 0;padding:14px 16px;margin-bottom:16px;font-size:.82rem;line-height:1.75}
+.hl.amber{border-color:#F59E0B;background:#FFFBEB;color:#78350F}
+.hl.teal{border-color:#0D9488;background:#F0FDFA;color:#134E4A}
+.hl.sky{border-color:#0EA5E9;background:#F0F9FF;color:#0C4A6E}
+.hl.purple{border-color:#7C3AED;background:#FAF5FF;color:#3B0764}
+
+/* 갯벌 체험 가이드 */
+.steps{background:var(--card);border-radius:16px;padding:18px;border:1px solid var(--border);margin-bottom:16px}
+.step{display:flex;gap:12px;margin-bottom:14px;align-items:flex-start}
+.step:last-child{margin-bottom:0}
+.step-num{width:28px;height:28px;border-radius:50%;background:var(--d3l);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:800;flex-shrink:0}
+.step-text{font-size:.83rem;color:var(--txt);line-height:1.6;padding-top:4px}
+
+/* vs 카드 */
+.vs-wrap{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.vs-card{background:var(--card);border-radius:14px;padding:14px;border:1px solid var(--border)}
+.vs-name{font-size:.85rem;font-weight:800;margin-bottom:8px}
+.vs-item{font-size:.77rem;color:var(--txt2);line-height:1.7}
+
+/* ─── FOOTER ────────────────────────────────── */
+footer{background:var(--navy);color:rgba(255,255,255,.35);text-align:center;padding:48px 20px calc(32px + var(--safe-b));font-size:.78rem;line-height:2.2}
+.ft-title{font-family:'Noto Serif KR',serif;font-size:1.2rem;color:rgba(94,234,212,.6);margin-bottom:8px;font-weight:700}
+
+/* ─── RESPONSIVE ────────────────────────────── */
+@media(max-width:480px){
+  .ov-grid{grid-template-columns:1fr 1fr}
+  .hero-title{letter-spacing:-2px}
+  .vs-wrap{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════ HERO ══════════════ -->
+<section id="hero">
+  <!-- 별 -->
+  <script>for(let i=0;i<40;i++){const s=document.createElement('span');s.className='star';s.style.cssText=`width:${Math.random()*3+1}px;height:${Math.random()*3+1}px;top:${Math.random()*100}%;left:${Math.random()*100}%;animation-delay:${Math.random()*3}s;animation-duration:${2+Math.random()*3}s`;document.currentScript.parentElement.appendChild(s)}</script>
+
+  <div class="hero-pill">✈ 2026 INCHEON TRIP</div>
+  <div class="hero-names">포뇨 &amp; 민주</div>
+  <h1 class="hero-title">인천</h1>
+  <div class="hero-dates">
+    10월 30일 금 — 11월 2일 월<br>
+    3박 4일 · 할로윈 + 인천 + 영종도
+  </div>
+  <div class="cd" id="cd">
+    <div class="cd-unit"><span class="cd-n" id="cd-d">--</span><span class="cd-u">DAY</span></div>
+    <div class="cd-unit"><span class="cd-n" id="cd-h">--</span><span class="cd-u">HR</span></div>
+    <div class="cd-unit"><span class="cd-n" id="cd-m">--</span><span class="cd-u">MIN</span></div>
+    <div class="cd-unit"><span class="cd-n" id="cd-s">--</span><span class="cd-u">SEC</span></div>
+  </div>
+  <div class="scroll-hint">▼ 스크롤</div>
+</section>
+
+<!-- ══════════════ FLOATING NAV ══════════════ -->
+<nav id="fnav">
+  <button class="fn-btn" data-d="0" onclick="jumpTo('d0')">🎃 10/30</button>
+  <button class="fn-btn" data-d="1" onclick="jumpTo('d1')">⛵ 10/31</button>
+  <button class="fn-btn" data-d="2" onclick="jumpTo('d2')">🦑 11/01</button>
+  <button class="fn-btn" data-d="3" onclick="jumpTo('d3')">🌊 11/02</button>
+  <button class="fn-btn" data-d="map" onclick="jumpTo('map-section')">🗺 지도</button>
+</nav>
+
+<!-- ══════════════ OVERVIEW ══════════════ -->
+<div id="overview">
+  <div class="ov-grid">
+    <div class="ov-card c0" onclick="jumpTo('d0')">
+      <div class="ov-emoji">🎃</div>
+      <div class="ov-date">10/30 · 금 · 반차</div>
+      <div class="ov-name">서울 할로윈<br>이태원 / 홍대</div>
+    </div>
+    <div class="ov-card c1" onclick="jumpTo('d1')">
+      <div class="ov-emoji">⛵</div>
+      <div class="ov-date">10/31 · 토 · 종일</div>
+      <div class="ov-name">인천 구도심<br>차이나타운 · 송도</div>
+    </div>
+    <div class="ov-card c2" onclick="jumpTo('d2')">
+      <div class="ov-emoji">🦑</div>
+      <div class="ov-date">11/01 · 일 · 종일</div>
+      <div class="ov-name">쭈꾸미 낚시<br>에어비앤비 요리</div>
+    </div>
+    <div class="ov-card c3" onclick="jumpTo('d3')">
+      <div class="ov-emoji">🌊</div>
+      <div class="ov-date">11/02 · 월 · 종일</div>
+      <div class="ov-name">영종도 하루<br>씨메르 · 갯벌 · 레일</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ MAP ══════════════ -->
+<div id="map-section" class="section">
+  <div style="padding:0 16px 16px;max-width:720px;margin:0 auto">
+    <div style="font-size:.75rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--txt2);margin-bottom:12px">🗺 전체 여행 루트</div>
+    <div class="map-wrap">
+      <div id="map"></div>
+    </div>
+    <div class="map-legend">
+      <div class="legend-dot" style="--c:#7C3AED">10/30 할로윈</div>
+      <div class="legend-dot" style="--c:#D97706">10/31 인천</div>
+      <div class="legend-dot" style="--c:#059669">11/01 낚시</div>
+      <div class="legend-dot" style="--c:#0284C7">11/02 영종도</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ DAY 0 ══════════════ -->
+<section class="section" id="d0">
+  <div class="s-banner b0">
+    <div class="b-deco tl">🎃</div>
+    <div class="b-deco br">🌙</div>
+    <div class="s-tag">Day 0 · Oct 30 · 금요일</div>
+    <h2 class="s-title">🎃 서울의 밤<br>할로윈 이브</h2>
+    <div class="s-sub">오후 반차 → 코스튬 → 이태원 or 홍대 → 인천 체크인</div>
+  </div>
+  <div class="s-body">
+
+    <div class="checklist">
+      <div class="cl-title">🎒 오늘 챙길 것</div>
+      <div class="cl-items">
+        <div class="cl-item" onclick="ck(this,'d0-1')"><span class="cl-icon">☐</span>코스튬 &amp; 분장 소품</div>
+        <div class="cl-item" onclick="ck(this,'d0-2')"><span class="cl-icon">☐</span>여행 짐 전부</div>
+        <div class="cl-item" onclick="ck(this,'d0-3')"><span class="cl-icon">☐</span>숙소 체크인 정보</div>
+        <div class="cl-item" onclick="ck(this,'d0-4')"><span class="cl-icon">☐</span>보조배터리 만충</div>
+        <div class="cl-item" onclick="ck(this,'d0-5')"><span class="cl-icon">☐</span>편한 신발 (많이 걸음)</div>
+      </div>
+    </div>
+
+    <!-- 이태원 vs 홍대 비교 -->
+    <div class="sdiv"><div class="sdiv-line"></div><div class="sdiv-text">🎭 어디 갈까?</div><div class="sdiv-line"></div></div>
+    <div class="vs-wrap">
+      <div class="vs-card">
+        <div class="vs-name">🗼 이태원</div>
+        <div class="vs-item">✦ 규모 가장 큼<br>✦ 외국인 많아 분위기 ↑<br>✦ 해밀턴 앞 거리 메인<br>✦ 코스튬 퀄리티 높음<br>✦ 늦게 갈수록 붐빔</div>
+      </div>
+      <div class="vs-card">
+        <div class="vs-name">🎨 홍대</div>
+        <div class="vs-item">✦ 젊고 활발한 에너지<br>✦ 포토존 많음<br>✦ 클럽 옵션 있음<br>✦ 음식점 선택지 ↑<br>✦ 이태원보다 조용함</div>
+      </div>
+    </div>
+
+    <div class="sdiv"><div class="sdiv-line"></div><div class="sdiv-text">🌙 저녁</div><div class="sdiv-line"></div></div>
+
+    <div class="act">
+      <div class="act-top">
+        <div class="act-icon" style="background:#F5F3FF">🏃</div>
+        <div>
+          <div class="act-time">오후 반차</div>
+          <div class="act-name">퇴근 + 출발 준비</div>
+          <div class="act-badges"><span class="badge b-move">이동</span></div>
+        </div>
+      </div>
+      <div class="act-desc">코스튬은 집에서 입고 나오면 시간 절약. 짐은 미리 숙소 코인락커 or 에어비앤비에 먼저 맡기기.</div>
+    </div>
+
+    <div class="act">
+      <div class="act-top">
+        <div class="act-icon" style="background:#F5F3FF">🎃</div>
+        <div>
+          <div class="act-time">저녁 7시~</div>
+          <div class="act-name">이태원 or 홍대 할로윈</div>
+          <div class="act-badges"><span class="badge b-cat">명소</span><span class="badge b-warn">출발 전 결정</span></div>
+        </div>
+      </div>
+      <div class="act-desc">1년에 딱 한 번. 코스튬 입고 거리에 나서는 느낌 진짜 특별함. 사진 많이 찍기 📷</div>
+      <div class="tip-box purple">💜 팁: 이태원이면 6호선 이태원역 1번 출구. 홍대면 2호선 홍대입구역 9번 출구.</div>
+      <div class="act-btns">
+        <div class="abt go" onclick="gmap('이태원 해밀턴 호텔')">🧭 이태원</div>
+        <div class="abt go" onclick="gmap('홍대 놀이터')">🧭 홍대</div>
+      </div>
+    </div>
+
+    <div class="act">
+      <div class="act-top">
+        <div class="act-icon" style="background:#FFF7ED">🍽️</div>
+        <div>
+          <div class="act-time">저녁 식사</div>
+          <div class="act-name">현지에서 저녁</div>
+          <div class="act-badges"><span class="badge b-cat">식당</span></div>
+        </div>
+      </div>
+      <div class="act-desc">이태원: 수제버거 / 멕시칸 / 이자카야<br>홍대: 와인바, 포차, 비어펍 — 골라먹기 천국</div>
+    </div>
+
+    <div class="act">
+      <div class="act-top">
+        <div class="act-icon" style="background:#EFF6FF">🏠</div>
+        <div>
+          <div class="act-time">밤 귀가</div>
+          <div class="act-name">인천 에어비앤비 체크인</div>
+          <div class="act-badges"><span class="badge b-move">이동 1시간</span></div>
+        </div>
+      </div>
+      <div class="act-desc">서울 ↔ 인천 약 1시간. 내일 아침 일찍 움직이니까 자정 전에 복귀 추천.</div>
+      <div class="tip-box yellow">💡 내일 차이나타운 9시에 가면 웨이팅 없이 여유롭게 즐길 수 있음!</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════ DAY 1 ══════════════ -->
+<section class="section" id="d1">
+  <div class="s-banner b1">
+    <div class="b-deco tl">⛵</div>
+    <div class="b-deco br">🏯</div>
+    <div class="s-tag">Day 1 · Oct 31 · 토요일</div>
+    <h2 class="s-title">⛵ 인천의 시간들<br>구도심 &amp; 송도</h2>
+    <div class="s-sub">차이나타운 → 동화마을 → 월미도 → 바다열차 → 더스카이 184 → 송도 → 찜질방</div>
+  </div>
+  <div class="s-body">
+
+    <div class="hl amber">📍 차이나타운 · 동화마을 · 월미도 · 월미 바다열차 — 전부 도보 이동 가능한 반경.<br>차이나타운 주차장 한 곳에 세워두면 오전 전체를 두 발로 탐방 가능.</div>
+
+    <!-- 일몰 위젯 -->
+    <div class="sunset-widget">
+      <div class="sun-emoji">🌅</div>
+      <div class="sun-time">17:49</div>
+      <div class="sun-sub">10월 31일 인천 일몰 시각 · 더스카이 184 방문 딱 맞는 타이밍</div>
+    </div>
+
+    <div class="checklist">
+      <div class="cl-title">🎒 오늘 챙길 것</div>
+      <div class="cl-items">
+        <div class="cl-item" onclick="ck(this,'d1-1')"><span class="cl-icon">☐</span>편한 운동화</div>
+        <div class="cl-item" onclick="ck(this,'d1-2')"><span class="cl-icon">☐</span>가벼운 겉옷 (바닷바람)</div>
+        <div class="cl-item" onclick="ck(this,'d1-3')"><span class="cl-icon">☐</span>월미 바다열차 예약 확인</div>
+        <div class="cl-item" onclick="ck(this,'d1-4')"><span class="cl-icon">☐</span>카메라 / 충전 완료</div>
+        <div class="cl-item" onclick="ck(this,'d1-5')"><span class="cl-icon">☐</span>찜질방 속옷 여벌</div>
+        <div class="cl-item" onclick="ck(this,'d1-6')"><span class="cl-icon">☐</span>현금 조금</div>
+      </div>
+    </div>
+
+    <div class="sdiv"><div class="sdiv-line"></div><div class="sdiv-text">🌅 오전 — 차이나타운 일대</div><div class="sdiv-line"></div></div>
+
+    <div class="act">
+      <div class="act-top">
+        <div class="act-icon" style="background:#FFF7ED">🥢</div>
+        <div>
+          <div class="act-time">09:00</div>
+          <div class="act-name">차이나타운 아침 산책</div>
+          <div class="act-badges"><span class="badge b-cat">명소</span><span class="badge b-move">도보</span></div>
+        </div>
+      </div>
+      <div class="act-desc">공갈빵, 월병, 탕후루 등 길거리 간식 냠냠. 한국 짜장면 발상지 — 역사도 같이 느껴볼 것.</div>
+      <div class="act-btns">
+        <div class="abt map" onclick="gmap('인천 차이나타운')">🗺 지도</div>
+      </div>
+    </div>
+
+    <div class="act">
+      <div class="act-top">
+        <div class="act-icon" style="background:#F0F9FF">🎨</div>
+        <div>
+          <div class="act-time">10:30</div>
+          <div class="act-name">동화마을 산책</div>
+          <div class="act-badges"><span class="badge b-cat">명소</span><span class="badge b-move">도보</span></div>
+        </div>
+      </div>
+      <div class="act-desc">차이나타운 바로 옆 언덕. 알록달록 벽화 + 포토존 가득. 계단 있으니 편한 신발 필수.</div>
+      <div class="act-btns">
+        <div class="abt map" onclick="gmap('인천 동화마을')">🗺 지도</div>
+      </div>
+    </div>
+
+    <div class="act">
+      <div class="act-top">
+        <div class="act-icon" style="background:#FFF7ED">🍜</div>
+        <div>
+          <div class="act-time">12:00</div>
+          <div class="act-name">점심 — 짜장면 성지에서</div>
+          <div class="act-badges"><span class="badge b-cat">식당</span><span class="badge b-warn">웨이팅 있음</span></div>
+        </div>
+      </div>
+      <div class="act-desc">공화춘 (짜장면 발상지) / 중화루 / 신승반점<br>짜장면 + 탕수육 여기서 안 먹으면 진짜 후회.</div>
+      <div class="tip-box yellow">🍜 원조집은 주말 웨이팅 있음 — 오전에 미리 확인해두기!</div>
+      <div class="act-btns">
+        <div class="abt map" onclick="gmap('공화춘 인천 차이나타운')">🗺 공화춘</div>
+        <div class="abt map" onclick="gmap('신승반점 인천')">🗺 신승반점</div>
+      </div>
+    </div>
+
+    <div class="sdiv"><div class="sdiv-line"></div><div class="sdiv-text">🚢 오후 — 월미도</div><div class="sdiv-line"></div></div>
+
+    <div class="act">
+      <div class="act-top">
+        <div class="act-icon" style="background:#F0F9FF">🌊</div>
+        <div>
+          <div class="act-time">13:30</div>
+          <div class="act-name">월미도 바다 산책</div>
+          <div class="act-badges"><span class="badge b-cat">명소</span><span class="badge b-move">도보</span></div>
+        </div>
+      </div>
+      <div class="act-desc">차이나타운에서 도보 15분 or 버스. 인천 앞바다 + 항구 풍경 보며 천천히 걷기.</div>
+    </div>
+
+    <div class="act">
+      <div class="act-top">
+        <div class="act-icon" style="background:#FDF4FF">🚂</div>
+        <div>
+          <div class="act-time">14:30</div>
+          <div class="act-name">월미 바다열차</div>
+          <div class="act-badges"><span class="badge b-cat">명소</span><span class="badge b-warn">예약 필수</span></div>
+        </div>
+      </div>
+      <div class="act-desc">월미도 해안선을 따라 달리는 모노레일. 소요 약 40분. 바다를 옆에 두고 달리는 느낌이 색다름.</div>
+      <div class="tip-box red">⚠️ 주말 웨이팅 있음 — 온라인 미리 예약 추천!</div>
+      <div class="act-btns">
+        <div class="abt go" onclick="window.open('https://www.wolmiseatrain.com','_blank')">예약 →</div>
+        <div class="abt map" onclick="gmap('월미 바다열차 인천')">🗺 지도</div>
+      </div>
+    </div>
+
+    <div class="sdiv"><div class="sdiv-line"></div><div class="sdiv-text">🌆 저녁 — 송도</div><div class="sdiv-line"></div></div>
+
+    <div class="act">
+      <div class="act-top">
+        <div class="act-icon" style="background:#F0F9FF">🏙️</div>
+        <div>
+          <div class="act-time">17:00</div>
+          <div class="act-name">더 스카이 184 전망대</div>
+          <div class="act-badges"><span class="badge b-cat">명소</span><span class="badge b-tip">일몰 타이밍</span></div>
+        </div>
+      </div>
+      <div class="act-desc">높이 184m에서 인천 + 서해 일몰 감상. 17:49 일몰에 맞춰 가면 황금빛 서해 뷰.</div>
+      <div class="tip-box sky">🌅 일몰 30분 전 도착이 베스트. 창문 자리 선점하기!</div>
+      <div class="act-btns">
+        <div class="abt map" onclick="gmap('더스카이184 인천 송도')">🗺 지도</div>
+      </div>
+    </div>
+
+    <div class="act">
+      <div class="act-top">
+        <div class="act-icon" style="background:#F0F9FF">🌃</div>
+        <div>
+          <div class="act-time">18:30</div>
+          <div class="act-name">송도 센트럴파크 야경 산책</div>
+          <div class="act-badges"><span class="badge b-cat">명소</span><span class="badge b-move">도보</span></div>
+        </div>
+      </div>
+      <div class="act-desc">수로 + 야경 + 카페 거리가 즐비. 인생샷 포토존 많음. 둘이서 느긋하게.</div>
+      <div class="act-btns">
+        <div class="abt map" onclick="gmap('송도 센트럴파크')">🗺 지도</div>
+      </div>
+    </div>
+
+    <div class="act">
+      <div class="act-top">
+        <div class="act-icon" style="background:#FFF7ED">🍽️</div>
+        <div>
+          <div class="act-time">19:30</div>
+          <div class="act-name">송도 저녁 식사</div>
+          <div class="act-badges"><span class="badge b-cat">식당</span></div>
+        </div>
+      </div>
+      <div class="act-desc">센트럴파크 주변 레스토랑 거리. 스테이크, 이탈리안, 해산물 골라먹기 천국.</div>
+    </div>
+
+    <div class="act">
+      <div class="act-top">
+        <div class="act-icon" style="background:#FDF4FF">🧖</div>
+        <div>
+          <div class="act-time">21:00~</div>
+          <div class="act-name">찜질방 데이트</div>
+          <div class="act-badges"><span class="badge b-cat">휴식</span><span class="badge b-tip">오늘 피로 풀기</span></div>
+        </div>
+      </div>
+      <div class="act-desc">오늘 많이 걸은 피로 싹 풀기. 찜질방 계란 + 식혜 + 황토방 루틴은 필수.</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════ DAY 2 ══════════════ -->
+<section class="section" id="d2">
+  <div class="s-banner b2">
+    <div class="b-deco tl">🦑</div>
+    <div class="b-deco br">🎣</div>
+    <div class="s-tag">Day 2 · Nov 1 · 일요일</div>
+    <h2 class="s-title">🦑 바다에서 잡고<br>식탁에서 먹고</h2>
+    <div class="s-sub">항동7가 낚시터 → 쭈꾸미 낚시 → 에어비앤비 요리 → 자유</div>
+  </div>
+  <div class="s-body">
+
+    <div class="hl teal">📍 낚시터 주소: <b>인천 중구 항동7가 27-171</b><br>쭈꾸미는 썰물 타이밍에 잘 잡힘 — 출발 전 당일 물때 꼭 확인!</div>
+
+    <!-- 조수 위젯 -->
+    <div class="tide-widget">
+      <div class="tide-title">🌊 11월 1일 인천 조수 예상</div>
+      <div class="tide-bar-wrap" id="tide-bar-wrap">
+        <div class="tide-bar-bg"></div>
+        <div class="tide-water" id="tide-water" style="height:30%"></div>
+      </div>
+      <div class="tide-times">
+        <span>🌊 간조 추정<br><b>~06:30</b></span>
+        <span style="text-align:center">📈 들물<br><b>06:30→</b></span>
+        <span style="text-align:right">🌊 만조 추정<br><b>~13:00</b></span>
+      </div>
+      <div class="tide-golden">
+        ⭐ 골든타임: 간조 전후 2시간 (약 05:00~08:30)<br>
+        쭈꾸미는 물이 빠진 상태에서 활성도 높음
+      </div>
+      <div class="tide-note">⚠️ 위 시간은 추정치입니다. 실제 출발 전 <b>"인천 물때"</b>로 검색해서 당일 간조 시각을 반드시 확인하세요.</div>
+    </div>
+
+    <div class="checklist">
+      <div class="cl-title">🎒 오늘 챙길 것</div>
+      <div class="cl-items">
+        <div class="cl-item" onclick="ck(this,'d2-1')"><span class="cl-icon">☐</span>낚시 예약 확인</div>
+        <div class="cl-item" onclick="ck(this,'d2-2')"><span class="cl-icon">☐</span>방수 바람막이</div>
+        <div class="cl-item" onclick="ck(this,'d2-3')"><span class="cl-icon">☐</span>장갑 (먹물 묻음)</div>
+        <div class="cl-item" onclick="ck(this,'d2-4')"><span class="cl-icon">☐</span>여벌 옷</div>
+        <div class="cl-item" onclick="ck(this,'d2-5')"><span class="cl-icon">☐</span>쭈꾸미 양념 재료</div>
+        <div class="cl-item" onclick="ck(this,'d2-6')"><span class="cl-icon">☐</span>이른 아침 커피 &amp; 간식</div>
+      </div>
+    </div>
+
+    <div class="sdiv"><div class="sdiv-line"></div><div class="sdiv-text">🌅 이른 아침</div><div class="sdiv-line"></div></div>
+
+    <div class="act">
+      <div class="act-top">
+        <div class="act-icon" style="background:#F8FAFC">🚗</div>
+        <div>
+          <div class="act-time">06:00</div>
+          <div class="act-name">낚시터 이동</div>
+          <div class="act-badges"><span class="badge b-move">자차</span></div>
+        </div>
+      </div>
+      <div class="act-desc">썰물 타이밍 맞추려면 이른 출발이 핵심. 바다 보며 마시는 새벽 커피는 진짜 낭만 있음.</div>
+      <div class="act-btns">
+        <div class="abt go" onclick="gmap('인천 중구 항동7가 27-171',true)">🧭 길찾기</div>
+        <div class="abt map" onclick="gmap('인천 중구 항동7가 27-171')">🗺 지도</div>
+      </div>
+    </div>
+
+    <div class="act">
+      <div class="act-top">
+        <div class="act-icon" style="background:#ECFDF5">🦑</div>
+        <div>
+          <div class="act-time">06:30 — 11:00</div>
+          <div class="act-name">쭈꾸미 낚시</div>
+          <div class="act-badges"><span class="badge b-cat">체험</span><span class="badge b-warn">먹물 조심</span></div>
+        </div>
+      </div>
+      <div class="act-desc">에기(가짜 새우 루어)로 낚는 방식. 장비 현장 렌탈 가능. 한 마리 낚는 순간 짜릿함 진짜임 ⚡</div>
+      <div class="tip-box teal">🦑 에기 색상은 <b>주황·핑크</b>가 잘 먹힘. 현장 스태프한테 포인트 위치 꼭 물어보기!</div>
+    </div>
+
+    <div class="sdiv"><div class="sdiv-line"></div><div class="sdiv-text">🍳 낮 — 에어비앤비 요리</div><div class="sdiv-line"></div></div>
+
+    <div class="act">
+      <div class="act-top">
+        <div class="act-icon" style="background:#FFF7ED">🍳</div>
+        <div>
+          <div class="act-time">12:00</div>
+          <div class="act-name">직접 잡은 쭈꾸미로 요리</div>
+          <div class="act-badges"><span class="badge b-cat">식당</span><span class="badge b-tip">오늘의 하이라이트</span></div>
+        </div>
+      </div>
+      <div class="act-desc">쭈꾸미 볶음 (고추장 양념 + 밥) — 국룰 조합.<br>샤브샤브도 간단하고 깔끔. 양 부족하면 마트 보충 OK.</div>
+      <div class="tip-box teal">📹 둘이 같이 요리하는 영상 꼭 남겨두기!</div>
+    </div>
+
+    <div class="act">
+      <div class="act-top">
+        <div class="act-icon" style="background:#EFF6FF">😴</div>
+        <div>
+          <div class="act-time">오후 자유</div>
+          <div class="act-name">오후는 완전 자유시간</div>
+          <div class="act-badges"><span class="badge b-tip">느긋하게</span></div>
+        </div>
+      </div>
+      <div class="act-desc">일찍 일어난 보상으로 낮잠도 OK. 근처 카페 산책 or 에어비앤비에서 넷플릭스. 내일 영종도 계획 얘기하기.</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════ DAY 3 ══════════════ -->
+<section class="section" id="d3">
+  <div class="s-banner b3">
+    <div class="b-deco tl">🌊</div>
+    <div class="b-deco br">🦪</div>
+    <div class="s-tag">Day 3 · Nov 2 · 월요일</div>
+    <h2 class="s-title">🌊 영종도 하루<br>바다 · 갯벌 · 하늘</h2>
+    <div class="s-sub">파라다이스시티 씨메르 → 점심 → 갯벌 + 맛조개 → 레일바이크 → 귀가</div>
+  </div>
+  <div class="s-body">
+
+    <div class="hl sky">📍 갯벌체험 + 맛조개는 썰물 2시간 전후가 골든타임!<br>씨메르 끝나고 바로 이동하면 타이밍 딱 맞을 수 있음 — 당일 물때 확인 필수.</div>
+
+    <div class="checklist">
+      <div class="cl-title">🎒 오늘 챙길 것</div>
+      <div class="cl-items">
+        <div class="cl-item" onclick="ck(this,'d3-1')"><span class="cl-icon">☐</span>수영복 + 수건</div>
+        <div class="cl-item" onclick="ck(this,'d3-2')"><span class="cl-icon">☐</span>갯벌용 장화 or 샌들</div>
+        <div class="cl-item" onclick="ck(this,'d3-3')"><span class="cl-icon">☐</span>갈아입을 여벌 옷</div>
+        <div class="cl-item" onclick="ck(this,'d3-4')"><span class="cl-icon">☐</span>자외선 차단제</div>
+        <div class="cl-item" onclick="ck(this,'d3-5')"><span class="cl-icon">☐</span>씨메르 예약 확인</div>
+        <div class="cl-item" onclick="ck(this,'d3-6')"><span class="cl-icon">☐</span>레일바이크 예약 확인</div>
+      </div>
+    </div>
+
+    <div class="sdiv"><div class="sdiv-line"></div><div class="sdiv-text">🌅 오전</div><div class="sdiv-line"></div></div>
+
+    <div class="act">
+      <div class="act-top">
+        <div class="act-icon" style="background:#FDF4FF">💦</div>
+        <div>
+          <div class="act-time">10:00 — 13:00</div>
+          <div class="act-name">파라다이스시티 씨메르 아쿠아스파</div>
+          <div class="act-badges"><span class="badge b-cat">스파</span><span class="badge b-warn">예약 필수</span></div>
+        </div>
+      </div>
+      <div class="act-desc">인천공항 옆 파라다이스시티 내 프리미엄 스파. 실내 온수풀 + 야외풀 + 사우나 통합. 여행 막날에 몸 제대로 풀기.</div>
+      <div class="tip-box red">⚠️ 온라인 예약 필수 — 현장 매진 자주 있음. 오픈 시간 맞춰서 가면 여유로움.</div>
+      <div class="act-btns">
+        <div class="abt go" onclick="window.open('https://www.p-city.com/kr/attraction/seamere.do','_blank')">예약 →</div>
+        <div class="abt map" onclick="gmap('파라다이스시티 인천')">🗺 지도</div>
+      </div>
+    </div>
+
+    <div class="act">
+      <div class="act-top">
+        <div class="act-icon" style="background:#FFF7ED">🐚</div>
+        <div>
+          <div class="act-time">13:00</div>
+          <div class="act-name">점심</div>
+          <div class="act-badges"><span class="badge b-cat">식당</span></div>
+        </div>
+      </div>
+      <div class="act-desc">씨메르 내 식당 or 영종도 해산물 맛집. 하나개 해수욕장 근처 조개구이집 분위기 좋음.</div>
+      <div class="act-btns">
+        <div class="abt map" onclick="gmap('하나개해수욕장 영종도 조개구이')">🗺 주변 식당</div>
+      </div>
+    </div>
+
+    <div class="sdiv"><div class="sdiv-line"></div><div class="sdiv-text">🌊 오후 — 갯벌 + 레일바이크</div><div class="sdiv-line"></div></div>
+
+    <div class="act">
+      <div class="act-top">
+        <div class="act-icon" style="background:#ECFDF5">🦪</div>
+        <div>
+          <div class="act-time">14:30</div>
+          <div class="act-name">맛조개 캐기 + 갯벌체험</div>
+          <div class="act-badges"><span class="badge b-cat">체험</span><span class="badge b-tip">소금만 있으면 OK</span></div>
+        </div>
+      </div>
+      <div class="act-desc">영종도 마시안 해변 갯벌 추천. 구멍에 소금 뿌리면 맛조개가 쑥 올라옴 — 진짜 신기함. 갯벌 들어가면 옷 더러워짐, 여벌 필수.</div>
+      <div class="act-btns">
+        <div class="abt map" onclick="gmap('마시안 해변 영종도')">🗺 지도</div>
+      </div>
+    </div>
+
+    <!-- 갯벌 가이드 -->
+    <div class="sdiv"><div class="sdiv-line"></div><div class="sdiv-text">💡 맛조개 캐기 방법</div><div class="sdiv-line"></div></div>
+    <div class="steps">
+      <div class="step"><div class="step-num" style="background:#0284C7">1</div><div class="step-text">썰물 때 갯벌에 구멍이 생기는 걸 찾는다. 지름 1~2cm 정도의 동그란 구멍!</div></div>
+      <div class="step"><div class="step-num" style="background:#0284C7">2</div><div class="step-text">구멍 위에 소금을 한 꼬집 뿌리고 3~5초 기다린다.</div></div>
+      <div class="step"><div class="step-num" style="background:#0284C7">3</div><div class="step-text">맛조개가 스르륵 올라오면 빠르게 잡아당긴다. 너무 세게 당기면 껍데기가 깨짐!</div></div>
+      <div class="step"><div class="step-num" style="background:#0284C7">4</div><div class="step-text">잡은 조개는 바닷물에 담가두기. 먹기 전 해감 필수 (소금물 30분 이상).</div></div>
+    </div>
+
+    <div class="act">
+      <div class="act-top">
+        <div class="act-icon" style="background:#F0F9FF">🚴</div>
+        <div>
+          <div class="act-time">16:30</div>
+          <div class="act-name">영종씨사이드 레일바이크</div>
+          <div class="act-badges"><span class="badge b-cat">액티비티</span><span class="badge b-warn">예약 추천</span></div>
+        </div>
+      </div>
+      <div class="act-desc">영종도 해안선 따라 달리는 2인승 레일바이크. 직접 페달 밟으면서 바다 보는 느낌 최고. 소요 약 40~60분.</div>
+      <div class="act-btns">
+        <div class="abt map" onclick="gmap('영종씨사이드레일바이크')">🗺 지도</div>
+      </div>
+    </div>
+
+    <div class="act">
+      <div class="act-top">
+        <div class="act-icon" style="background:#F8FAFC">🚗</div>
+        <div>
+          <div class="act-time">18:00</div>
+          <div class="act-name">여행 마무리 + 귀가</div>
+          <div class="act-badges"><span class="badge b-move">공항철도 or 자차</span></div>
+        </div>
+      </div>
+      <div class="act-desc">영종도 → 서울 약 1시간. 차 안에서 여행 얘기 나누면서 마무리. 수고했어요 🎉</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════ FOOTER ══════════════ -->
+<footer>
+  <div class="ft-title">인천 여행 2026</div>
+  포뇨 &amp; 민주 · 10월 30일 — 11월 2일<br>
+  차이나타운 · 동화마을 · 월미도 · 송도 · 쭈꾸미낚시 · 영종도<br>
+  <span style="opacity:.3;font-size:.68rem;display:block;margin-top:10px">37.4563° N, 126.7052° E</span>
+</footer>
+
+<script>
+/* ─── 카운트다운 ─── */
+function tick(){
+  const diff = new Date('2026-10-30T13:00:00+09:00') - new Date();
+  if(diff<=0){
+    document.getElementById('cd').innerHTML='<div style="color:#5EEAD4;font-size:1.1rem;font-weight:700">🎉 여행 중이에요!</div>';
+    return;
+  }
+  document.getElementById('cd-d').textContent=String(Math.floor(diff/86400000)).padStart(2,'0');
+  document.getElementById('cd-h').textContent=String(Math.floor(diff%86400000/3600000)).padStart(2,'0');
+  document.getElementById('cd-m').textContent=String(Math.floor(diff%3600000/60000)).padStart(2,'0');
+  document.getElementById('cd-s').textContent=String(Math.floor(diff%60000/1000)).padStart(2,'0');
+}
+tick(); setInterval(tick,1000);
+
+/* ─── 섹션 점프 ─── */
+function jumpTo(id){
+  document.getElementById(id)?.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+/* ─── 스크롤 스파이 ─── */
+const secMap={d0:0,d1:1,d2:2,d3:3,'map-section':'map'};
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const key=secMap[e.target.id];
+      if(key===undefined) return;
+      document.querySelectorAll('.fn-btn').forEach(b=>b.classList.toggle('active',b.dataset.d==String(key)));
+    }
+  });
+},{threshold:.2});
+['d0','d1','d2','d3','map-section'].forEach(id=>{const el=document.getElementById(id);if(el)observer.observe(el);});
+
+/* ─── 체크리스트 ─── */
+function ck(el,key){
+  el.classList.toggle('done');
+  el.querySelector('.cl-icon').textContent=el.classList.contains('done')?'☑':'☐';
+  try{localStorage.setItem('ck_'+key,el.classList.contains('done')?'1':'0');}catch(e){}
+}
+// 저장된 체크 복원
+document.querySelectorAll('.cl-item').forEach(el=>{
+  const onclick=el.getAttribute('onclick');
+  const m=onclick&&onclick.match(/'([^']+)'/);
+  if(!m) return;
+  try{if(localStorage.getItem('ck_'+m[1])==='1'){el.classList.add('done');el.querySelector('.cl-icon').textContent='☑';}}catch(e){}
+});
+
+/* ─── 지도 ─── */
+function gmap(q,nav=false){
+  const base=nav?'https://www.google.com/maps/dir/?api=1&destination=':'https://www.google.com/maps/search/?api=1&query=';
+  window.open(base+encodeURIComponent(q),'_blank');
+}
+
+// 네이버 지도
+const PINS=[
+  {lat:37.5563,lng:126.9723,label:'이태원',day:0,color:'#7C3AED'},
+  {lat:37.4755,lng:126.6174,label:'차이나타운',day:1,color:'#D97706'},
+  {lat:37.4758,lng:126.6169,label:'동화마을',day:1,color:'#D97706'},
+  {lat:37.4757,lng:126.5987,label:'월미도',day:1,color:'#D97706'},
+  {lat:37.3847,lng:126.6572,label:'더스카이184',day:1,color:'#D97706'},
+  {lat:37.3799,lng:126.6560,label:'송도',day:1,color:'#D97706'},
+  {lat:37.4542,lng:126.5897,label:'쭈꾸미낚시',day:2,color:'#059669'},
+  {lat:37.4918,lng:126.4887,label:'씨메르',day:3,color:'#0284C7'},
+  {lat:37.4812,lng:126.4602,label:'갯벌체험',day:3,color:'#0284C7'},
+  {lat:37.4890,lng:126.4720,label:'레일바이크',day:3,color:'#0284C7'},
+];
+
+const map=new naver.maps.Map('map',{
+  center:new naver.maps.LatLng(37.45,126.62),
+  zoom:10,
+  scaleControl:false,
+  logoControlOptions:{position:naver.maps.Position.BOTTOM_LEFT}
+});
+
+PINS.forEach((p,i)=>{
+  const marker=new naver.maps.Marker({
+    position:new naver.maps.LatLng(p.lat,p.lng),
+    map,
+    icon:{
+      content:`<div style="width:26px;height:26px;border-radius:50%;background:${p.color};color:#fff;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:800;border:2px solid #fff;box-shadow:0 1px 5px rgba(0,0,0,.3);cursor:pointer">${i+1}</div>`,
+      anchor:new naver.maps.Point(13,13)
+    }
+  });
+  const infoWindow=new naver.maps.InfoWindow({content:`<div style="padding:6px 10px;font-size:13px;font-weight:700">${p.label}</div>`});
+  naver.maps.Event.addListener(marker,'click',()=>{
+    if(infoWindow.getMap()) infoWindow.close();
+    else infoWindow.open(map,marker);
+  });
+});
+
+// 루트 선 (일별)
+const byDay=[[],[],[],[]];
+PINS.forEach(p=>byDay[p.day].push(new naver.maps.LatLng(p.lat,p.lng)));
+const colors=['#7C3AED','#D97706','#059669','#0284C7'];
+byDay.forEach((pts,i)=>{
+  if(pts.length>1) new naver.maps.Polyline({map,path:pts,strokeColor:colors[i],strokeWeight:2.5,strokeOpacity:.7,strokeStyle:i===0?'shortdash':'solid'});
+});
+
+/* ─── 조수 위젯 애니메이션 ─── */
+let tideH=30;
+setInterval(()=>{
+  const el=document.getElementById('tide-water');
+  if(!el) return;
+  const now=new Date();
+  const mins=now.getHours()*60+now.getMinutes();
+  // 06:30=390분 간조(0%), 13:00=780분 만조(100%)
+  const cycleMin=390; const cycleRange=390;
+  const pct=Math.max(5,Math.min(95,((mins-cycleMin)/cycleRange)*100));
+  el.style.height=pct+'%';
+},60000);
+
+/* ─── PWA ─── */
+(function(){
+  const c=document.createElement('canvas');c.width=c.height=192;
+  const ctx=c.getContext('2d');
+  ctx.fillStyle='#0a0f1e';ctx.fillRect(0,0,192,192);
+  ctx.fillStyle='#5EEAD4';ctx.font='bold 90px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('✈',96,100);
+  const icon=c.toDataURL();
+  const m={name:'인천여행',short_name:'인천여행',start_url:'.',display:'standalone',theme_color:'#0a0f1e',background_color:'#f8fafc',icons:[{src:icon,sizes:'192x192',type:'image/png'}]};
+  const b=new Blob([JSON.stringify(m)],{type:'application/json'});
+  const l=document.createElement('link');l.rel='manifest';l.href=URL.createObjectURL(b);document.head.appendChild(l);
+  const ai=document.createElement('link');ai.rel='apple-touch-icon';ai.href=icon;document.head.appendChild(ai);
+})();
+</script>
+</body>
+</html>
