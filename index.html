@@ -7,6 +7,7 @@
 <meta name="theme-color" content="#0a0f1e">
 <title>인천 여행 2026 — 포뇨 & 민주</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@700;900&family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=3rulct9aeo"></script>
 <style>
 /* ─── TOKENS ─────────────────────────────────── */
 :root{
@@ -102,7 +103,10 @@ img{display:block}
 /* ─── MAP ───────────────────────────────────── */
 #map-section{padding:0 16px 40px;max-width:720px;margin:0 auto}
 .map-wrap{border-radius:20px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.1)}
-#map{height:320px;background:#e0e8f0}
+#map{height:360px;background:#e0e8f0}
+.map-tabs{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.map-tab{padding:7px 16px;border-radius:999px;border:1.5px solid var(--border);background:#fff;font-size:.8rem;font-weight:700;cursor:pointer;transition:all .2s;color:var(--txt2)}
+.map-tab.active{color:#fff;border-color:transparent}
 .map-legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
 .legend-dot{display:flex;align-items:center;gap:6px;font-size:.75rem;color:var(--txt2)}
 .legend-dot::before{content:'';width:10px;height:10px;border-radius:50%;background:var(--c)}
@@ -260,41 +264,17 @@ footer{background:var(--navy);color:rgba(255,255,255,.35);text-align:center;padd
 <!-- ══════════════ MAP ══════════════ -->
 <div id="map-section" class="section">
   <div style="padding:0 16px 32px;max-width:720px;margin:0 auto">
-    <div style="font-size:.75rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--txt2);margin-bottom:16px">🗺 전체 여행 루트</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-      <a href="https://maps.google.com/?q=이태원" target="_blank" style="text-decoration:none;background:#F5F3FF;border:1.5px solid #7C3AED22;border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:10px">
-        <div style="width:10px;height:10px;border-radius:50%;background:#7C3AED;flex-shrink:0"></div>
-        <div><div style="font-size:.65rem;color:#7C3AED;font-weight:700">Day 0 · 10/30</div><div style="font-size:.88rem;font-weight:700;color:#111">이태원 / 홍대</div></div>
-      </a>
-      <a href="https://maps.google.com/?q=인천+차이나타운" target="_blank" style="text-decoration:none;background:#FFFBEB;border:1.5px solid #D9770622;border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:10px">
-        <div style="width:10px;height:10px;border-radius:50%;background:#D97706;flex-shrink:0"></div>
-        <div><div style="font-size:.65rem;color:#D97706;font-weight:700">Day 1 · 10/31</div><div style="font-size:.88rem;font-weight:700;color:#111">차이나타운</div></div>
-      </a>
-      <a href="https://maps.google.com/?q=인천+월미도" target="_blank" style="text-decoration:none;background:#FFFBEB;border:1.5px solid #D9770622;border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:10px">
-        <div style="width:10px;height:10px;border-radius:50%;background:#D97706;flex-shrink:0"></div>
-        <div><div style="font-size:.65rem;color:#D97706;font-weight:700">Day 1 · 10/31</div><div style="font-size:.88rem;font-weight:700;color:#111">월미도 / 동화마을</div></div>
-      </a>
-      <a href="https://maps.google.com/?q=더스카이184+인천+송도" target="_blank" style="text-decoration:none;background:#FFFBEB;border:1.5px solid #D9770622;border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:10px">
-        <div style="width:10px;height:10px;border-radius:50%;background:#D97706;flex-shrink:0"></div>
-        <div><div style="font-size:.65rem;color:#D97706;font-weight:700">Day 1 · 10/31</div><div style="font-size:.88rem;font-weight:700;color:#111">더스카이184 / 송도</div></div>
-      </a>
-      <a href="https://maps.google.com/?q=인천+중구+항동7가+27-171" target="_blank" style="text-decoration:none;background:#ECFDF5;border:1.5px solid #05966922;border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:10px">
-        <div style="width:10px;height:10px;border-radius:50%;background:#059669;flex-shrink:0"></div>
-        <div><div style="font-size:.65rem;color:#059669;font-weight:700">Day 2 · 11/01</div><div style="font-size:.88rem;font-weight:700;color:#111">쭈꾸미낚시터</div></div>
-      </a>
-      <a href="https://maps.google.com/?q=파라다이스시티+인천" target="_blank" style="text-decoration:none;background:#F0F9FF;border:1.5px solid #0284C722;border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:10px">
-        <div style="width:10px;height:10px;border-radius:50%;background:#0284C7;flex-shrink:0"></div>
-        <div><div style="font-size:.65rem;color:#0284C7;font-weight:700">Day 3 · 11/02</div><div style="font-size:.88rem;font-weight:700;color:#111">씨메르 / 영종도</div></div>
-      </a>
-      <a href="https://maps.google.com/?q=마시안해변+영종도" target="_blank" style="text-decoration:none;background:#F0F9FF;border:1.5px solid #0284C722;border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:10px">
-        <div style="width:10px;height:10px;border-radius:50%;background:#0284C7;flex-shrink:0"></div>
-        <div><div style="font-size:.65rem;color:#0284C7;font-weight:700">Day 3 · 11/02</div><div style="font-size:.88rem;font-weight:700;color:#111">갯벌 / 레일바이크</div></div>
-      </a>
-      <a href="https://maps.google.com/maps?q=37.45,126.62&z=11" target="_blank" style="text-decoration:none;background:#f1f5f9;border:1.5px solid #CBD5E122;border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:10px">
-        <div style="width:10px;height:10px;border-radius:50%;background:#64748B;flex-shrink:0"></div>
-        <div><div style="font-size:.65rem;color:#64748B;font-weight:700">전체 보기</div><div style="font-size:.88rem;font-weight:700;color:#111">구글맵 전체 루트 →</div></div>
-      </a>
+    <div style="font-size:.75rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--txt2);margin-bottom:12px">🗺 여행 루트</div>
+    <div class="map-tabs">
+      <button class="map-tab active" style="background:#7C3AED" onclick="showRoute(0,this)">🎃 Day 0</button>
+      <button class="map-tab" onclick="showRoute(1,this)">🏙 Day 1</button>
+      <button class="map-tab" onclick="showRoute(2,this)">🎣 Day 2</button>
+      <button class="map-tab" onclick="showRoute(3,this)">🌊 Day 3</button>
     </div>
+    <div class="map-wrap">
+      <div id="map"></div>
+    </div>
+    <div id="map-stop-list" style="margin-top:12px;display:flex;flex-wrap:wrap;gap:8px"></div>
   </div>
 </div>
 
@@ -843,6 +823,94 @@ document.querySelectorAll('.cl-item').forEach(el=>{
 function gmap(q,nav=false){
   const base=nav?'https://www.google.com/maps/dir/?api=1&destination=':'https://www.google.com/maps/search/?api=1&query=';
   window.open(base+encodeURIComponent(q),'_blank');
+}
+
+const ROUTES=[
+  {color:'#7C3AED',label:'Day 0 · 할로윈',center:[37.543,126.948],zoom:12,stops:[
+    {lat:37.5563,lng:126.9723,name:'① 이태원'},
+    {lat:37.5596,lng:126.9242,name:'② 홍대 놀이터'},
+    {lat:37.4755,lng:126.6174,name:'③ 인천 숙소'},
+  ]},
+  {color:'#D97706',label:'Day 1 · 인천 구도심',center:[37.43,126.62],zoom:12,stops:[
+    {lat:37.4755,lng:126.6174,name:'① 차이나타운'},
+    {lat:37.4758,lng:126.6169,name:'② 동화마을'},
+    {lat:37.4757,lng:126.5987,name:'③ 월미도 바다열차'},
+    {lat:37.3847,lng:126.6572,name:'④ 더스카이184'},
+    {lat:37.3799,lng:126.6560,name:'⑤ 송도 센트럴파크'},
+  ]},
+  {color:'#059669',label:'Day 2 · 낚시 & 요리',center:[37.46,126.59],zoom:13,stops:[
+    {lat:37.4542,lng:126.5897,name:'① 쭈꾸미낚시터'},
+    {lat:37.4600,lng:126.5900,name:'② 에어비앤비 귀가'},
+  ]},
+  {color:'#0284C7',label:'Day 3 · 영종도',center:[37.487,126.475],zoom:13,stops:[
+    {lat:37.4918,lng:126.4887,name:'① 씨메르 스파'},
+    {lat:37.4812,lng:126.4602,name:'② 마시안 갯벌'},
+    {lat:37.4890,lng:126.4720,name:'③ 레일바이크'},
+  ]},
+];
+
+let naverMap,curMarkers=[],curPolyline=null;
+
+function initMap(){
+  naverMap=new naver.maps.Map('map',{
+    center:new naver.maps.LatLng(37.45,126.62),
+    zoom:10,
+    scaleControl:false,
+  });
+  showRoute(0,document.querySelector('.map-tab'));
+}
+
+function showRoute(dayIdx,btn){
+  document.querySelectorAll('.map-tab').forEach(t=>{
+    t.classList.remove('active');
+    t.style.background='';
+    t.style.color='';
+  });
+  btn.classList.add('active');
+  btn.style.background=ROUTES[dayIdx].color;
+  btn.style.color='#fff';
+
+  curMarkers.forEach(m=>m.setMap(null));
+  curMarkers=[];
+  if(curPolyline) curPolyline.setMap(null);
+
+  const r=ROUTES[dayIdx];
+  naverMap.setCenter(new naver.maps.LatLng(r.center[0],r.center[1]));
+  naverMap.setZoom(r.zoom);
+
+  const path=r.stops.map(s=>new naver.maps.LatLng(s.lat,s.lng));
+
+  curPolyline=new naver.maps.Polyline({
+    map:naverMap,path,
+    strokeColor:r.color,strokeWeight:3,strokeOpacity:.8,strokeStyle:'solid'
+  });
+
+  r.stops.forEach((s,i)=>{
+    const m=new naver.maps.Marker({
+      position:new naver.maps.LatLng(s.lat,s.lng),
+      map:naverMap,
+      icon:{
+        content:`<div style="min-width:28px;padding:4px 8px;border-radius:20px;background:${r.color};color:#fff;font-size:.72rem;font-weight:800;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.25);white-space:nowrap;text-align:center">${s.name}</div>`,
+        anchor:new naver.maps.Point(14,14)
+      }
+    });
+    curMarkers.push(m);
+  });
+
+  const stopList=document.getElementById('map-stop-list');
+  stopList.innerHTML=r.stops.map((s,i)=>
+    `<div style="display:flex;align-items:center;gap:6px;background:#fff;border:1.5px solid ${r.color}33;border-radius:999px;padding:5px 12px;font-size:.78rem;font-weight:700;color:${r.color}">${s.name}</div>`
+  ).join('');
+}
+
+if(typeof naver!=='undefined'&&naver.maps){
+  naver.maps.onJSContentLoaded=initMap;
+  if(document.readyState==='complete') initMap();
+  else window.addEventListener('load',initMap);
+} else {
+  window.addEventListener('load',()=>{
+    if(typeof naver!=='undefined') initMap();
+  });
 }
 
 
